@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://colin-b.github.io/logging_json/ -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>logging_json | JSON formatter for python logging</title>
+<meta name="generator" content="Jekyll v3.9.3">
+<meta property="og:title" content="logging_json">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="JSON formatter for python logging">
+<meta property="og:description" content="JSON formatter for python logging">
+<link rel="canonical" href="https://colin-b.github.io/logging_json/">
+<meta property="og:url" content="https://colin-b.github.io/logging_json/">
+<meta property="og:site_name" content="logging_json">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="logging_json">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"JSON formatter for python logging","headline":"logging_json","name":"logging_json","url":"https://colin-b.github.io/logging_json/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link rel="preload" href="./logging_json_files/css" as="style" type="text/css" crossorigin="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="./logging_json_files/style.css">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/logging_json/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <a id="skip-to-content" href="https://colin-b.github.io/logging_json/#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">logging_json</h1>
+      <h2 class="project-tagline">JSON formatter for python logging</h2>
+      
+        <a href="https://github.com/Colin-b/logging_json" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h2 align="center">JSON formatter for logging</h2>
+
+<p align="center">
+<a href="https://pypi.org/project/logging_json/"><img alt="pypi version" src="./logging_json_files/logging_json"></a>
+<a href="https://github.com/Colin-b/logging_json/actions"><img alt="Build status" src="./logging_json_files/badge.svg"></a>
+<a href="https://github.com/Colin-b/logging_json/actions"><img alt="Coverage" src="./logging_json_files/coverage-100%-brightgreen"></a>
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="./logging_json_files/code style-black-000000.svg"></a>
+<a href="https://github.com/Colin-b/logging_json/actions"><img alt="Number of tests" src="./logging_json_files/tests-25 passed-blue"></a>
+<a href="https://pypi.org/project/logging_json/"><img alt="Number of downloads" src="./logging_json_files/logging_json(1)"></a>
+</p>
+
+<p>This module provides a JSON formatter for the python <a href="https://docs.python.org/3/library/logging.html"><code class="language-plaintext highlighter-rouge">logging</code></a> module that will format to JSON formatted string.</p>
+
+<p>Using this formatter allows to have the proper format for logging to <code class="language-plaintext highlighter-rouge">Splunk</code> or <code class="language-plaintext highlighter-rouge">ElasticSearch</code>, but it can also be used for logging to stdout as a string is issued.</p>
+
+<ul>
+  <li><a href="https://colin-b.github.io/logging_json/#features">Features</a>
+    <ul>
+      <li><a href="https://colin-b.github.io/logging_json/#adding-additional-fields-and-values">Custom fields</a></li>
+      <li><a href="https://colin-b.github.io/logging_json/#logging-with-a-dictionary">dict logging</a></li>
+      <li><a href="https://colin-b.github.io/logging_json/#logging-with-anything-else-such-as-a-string">str logging</a></li>
+    </ul>
+  </li>
+  <li><a href="https://colin-b.github.io/logging_json/#configuration">Configuration</a>
+    <ul>
+      <li><a href="https://colin-b.github.io/logging_json/#using-loggingconfigdictconfig">Using dictConfig</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="features">Features</h2>
+
+<h3 id="adding-additional-fields-and-values">Adding additional fields and values</h3>
+
+<p>You can add fields to every message that is being logged.
+To do so, specify the <code class="language-plaintext highlighter-rouge">fields</code> parameter to the <code class="language-plaintext highlighter-rouge">logging_json.JSONFormatter</code> instance.</p>
+
+<p>It must be a dictionary where keys are the keys to be appended to the resulting JSON dictionary (if not already present) and the values can be one of the following:</p>
+<ul>
+  <li>An attribute of the logging record (non-exhaustive list can be found on <a href="https://docs.python.org/3/library/logging.html#logrecord-attributes">the python logging documentation</a>).</li>
+  <li>If not found on the record, the value will be linked to the key.</li>
+</ul>
+
+<h4 id="logging-exceptions-a-specific-case">Logging exceptions, a specific case</h4>
+
+<p>If an exception is logged, the <code class="language-plaintext highlighter-rouge">exception</code> key will be appended to the resulting JSON dictionary.</p>
+
+<p>This dictionary will contain 3 keys:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">type</code>: The name of the exception class (useful when the message is blank).</li>
+  <li><code class="language-plaintext highlighter-rouge">message</code>: The str representation of the exception (usually the provided error message).</li>
+  <li><code class="language-plaintext highlighter-rouge">stack</code>: The stack trace, formatted as a string.</li>
+</ul>
+
+<p>You can rename the exception field key by setting the <code class="language-plaintext highlighter-rouge">exception_field_name</code> parameter with a new name for the key.
+It is also possible to disable this behaviour by setting the <code class="language-plaintext highlighter-rouge">exception_field_name</code> parameter to <code class="language-plaintext highlighter-rouge">None</code> or an empty string</p>
+
+<h3 id="logging-with-a-dictionary">Logging with a dictionary</h3>
+
+<p>This formatter allows you to log dictionary as in the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="n">info</span><span class="p">({</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">,</span> <span class="s">"other key"</span><span class="p">:</span> <span class="s">"other value"</span><span class="p">})</span>
+</code></pre></div></div>
+
+<p>The resulting JSON dictionary will be the one you provided (with the <a href="https://colin-b.github.io/logging_json/#adding-additional-fields-and-values">additional fields</a>).</p>
+
+<h3 id="logging-with-anything-else-such-as-a-string">Logging with anything else (such as a string)</h3>
+
+<p>Anything not logged using a dictionary will be handled by the standard formatter, and it can result in one of the 2 output:</p>
+<ul>
+  <li>A JSON dictionary, if <a href="https://colin-b.github.io/logging_json/#adding-additional-fields-and-values">additional fields</a> are set or if <code class="language-plaintext highlighter-rouge">extra</code> parameter is used while logging, with the message available in the <code class="language-plaintext highlighter-rouge">message</code> key of the resulting JSON dictionary.
+Default <code class="language-plaintext highlighter-rouge">message</code> key name can be changed by <code class="language-plaintext highlighter-rouge">message_field_name</code> parameter of the <code class="language-plaintext highlighter-rouge">logging_json.JSONFormatter</code> instance.</li>
+  <li>The formatted record, if no <a href="https://colin-b.github.io/logging_json/#adding-additional-fields-and-values">additional fields</a> are set.</li>
+</ul>
+
+<p>This handles the usual string logging as in the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"This is my message"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="changing-asctime-representation">Changing asctime representation</h3>
+
+<p>You can override the default representation of asctime (<code class="language-plaintext highlighter-rouge">2003-07-08 16:49:45,896</code>) based on two different scenarii:</p>
+
+<h4 id="without-milliseconds">Without milliseconds</h4>
+
+<p>Set <code class="language-plaintext highlighter-rouge">datefmt</code> parameter.</p>
+
+<p>Setting <code class="language-plaintext highlighter-rouge">datefmt</code> to <code class="language-plaintext highlighter-rouge">%Y-%m-%dT%H:%M:%S</code> would result in <code class="language-plaintext highlighter-rouge">2003-07-08T16:49:45</code>.</p>
+
+<h4 id="with-milliseconds">With milliseconds</h4>
+
+<p>Set <code class="language-plaintext highlighter-rouge">default_time_format</code> to something else than <code class="language-plaintext highlighter-rouge">%Y-%m-%d %H:%M:%S</code> to change the representation part without milliseconds.
+Set <code class="language-plaintext highlighter-rouge">default_msec_format</code> to something else than <code class="language-plaintext highlighter-rouge">%s,%03d</code> to change the representation milliseconds.
+Note that <code class="language-plaintext highlighter-rouge">%s</code> in <code class="language-plaintext highlighter-rouge">default_msec_format</code> is going to be replaced by the representation without milliseconds.</p>
+
+<p>Setting <code class="language-plaintext highlighter-rouge">default_time_format</code> to <code class="language-plaintext highlighter-rouge">%Y-%m-%dT%H:%M:%S</code> and <code class="language-plaintext highlighter-rouge">default_msec_format</code> to <code class="language-plaintext highlighter-rouge">%s.%03d</code> would result in <code class="language-plaintext highlighter-rouge">2003-07-08T16:49:45.896</code>.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>You can create a formatter instance yourself as in the following, or you can use a logging configuration.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging_json</span>
+
+<span class="n">formatter</span> <span class="o">=</span> <span class="n">logging_json</span><span class="p">.</span><span class="n">JSONFormatter</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">"level_name"</span><span class="p">:</span> <span class="s">"levelname"</span><span class="p">,</span>
+    <span class="s">"thread_name"</span><span class="p">:</span> <span class="s">"threadName"</span><span class="p">,</span>
+    <span class="s">"process_name"</span><span class="p">:</span> <span class="s">"processName"</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h3 id="using-loggingconfigdictconfig">Using logging.config.dictConfig</h3>
+
+<p>You can configure your logging as advertise by python, by using the <code class="language-plaintext highlighter-rouge">logging.config.dictConfig</code> function.</p>
+
+<h4 id="dict-configuration">dict configuration</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging.config</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">dictConfig</span><span class="p">({</span>
+    <span class="s">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">"formatters"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"json"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">'()'</span><span class="p">:</span> <span class="s">'logging_json.JSONFormatter'</span><span class="p">,</span>
+            <span class="s">'fields'</span><span class="p">:{</span>
+                <span class="s">"level_name"</span><span class="p">:</span> <span class="s">"levelname"</span><span class="p">,</span>
+                <span class="s">"thread_name"</span><span class="p">:</span> <span class="s">"threadName"</span><span class="p">,</span>
+                <span class="s">"process_name"</span><span class="p">:</span> <span class="s">"processName"</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"handlers"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"standard_output"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">'class'</span><span class="p">:</span> <span class="s">'logging.StreamHandler'</span><span class="p">,</span>
+            <span class="s">'formatter'</span><span class="p">:</span> <span class="s">'json'</span><span class="p">,</span>
+            <span class="s">'stream'</span><span class="p">:</span> <span class="s">'ext://sys.stdout'</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s">"loggers"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"my_app"</span><span class="p">:</span> <span class="p">{</span><span class="s">"level"</span><span class="p">:</span> <span class="s">"DEBUG"</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"root"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"level"</span><span class="p">:</span> <span class="s">"INFO"</span><span class="p">,</span>
+        <span class="s">"handlers"</span><span class="p">:</span> <span class="p">[</span><span class="s">"standard_output"</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h4 id="yaml-logging-configuration">YAML logging configuration</h4>
+
+<p>You can use YAML to store your logging configuration, as in the following sample:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging.config</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"path/to/logging_configuration.yaml"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
+    <span class="n">logging</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">yaml</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Where <code class="language-plaintext highlighter-rouge">logging_configuration.yaml</code> can be a file containing the following sample:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="m">1</span>
+<span class="na">formatters</span><span class="pi">:</span>
+  <span class="na">json</span><span class="pi">:</span>
+    <span class="s1">'</span><span class="s">()'</span><span class="pi">:</span> <span class="s">logging_json.JSONFormatter</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="na">level_name</span><span class="pi">:</span> <span class="s">levelname</span>
+      <span class="na">thread_name</span><span class="pi">:</span> <span class="s">threadName</span>
+      <span class="na">process_name</span><span class="pi">:</span> <span class="s">processName</span>
+<span class="na">handlers</span><span class="pi">:</span>
+  <span class="na">standard_output</span><span class="pi">:</span>
+    <span class="na">class</span><span class="pi">:</span> <span class="s">logging.StreamHandler</span>
+    <span class="na">formatter</span><span class="pi">:</span> <span class="s">json</span>
+    <span class="na">stream</span><span class="pi">:</span> <span class="s">ext://sys.stdout</span>
+<span class="na">loggers</span><span class="pi">:</span>
+  <span class="na">my_app</span><span class="pi">:</span>
+    <span class="na">level</span><span class="pi">:</span> <span class="s">DEBUG</span>
+<span class="na">root</span><span class="pi">:</span>
+  <span class="na">level</span><span class="pi">:</span> <span class="s">INFO</span>
+  <span class="na">handlers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">standard_output</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h2 id="how-to-install">How to install</h2>
+<ol>
+  <li><a href="https://www.python.org/downloads/">python 3.7+</a> must be installed</li>
+  <li>Use pip to install module:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> pip <span class="nb">install </span>logging_json
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/Colin-b/logging_json">logging_json</a> is maintained by <a href="https://github.com/Colin-b">Colin-b</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com/">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  
+
+</body></html>
